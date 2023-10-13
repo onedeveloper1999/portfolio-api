@@ -1,7 +1,5 @@
-using AutoWrapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Portfolio.Api.Endpoints.Filters;
 using Portfolio.Api.Endpoints.Helpers;
 using Portfolio.Application;
 using Portfolio.Infrastructure;
@@ -15,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", securityScheme: new OpenApiSecurityScheme
     {
         Description = "Jwt Bearer Service",
         Name = "Bearer",
@@ -23,6 +21,16 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.Http,
         Scheme = "bearer"
     });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+       {
+         new OpenApiSecurityScheme
+         {
+           Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+         },
+         new string[] {}
+       }
+  });
 });
 
 builder.Services.AddApplication()
@@ -39,19 +47,15 @@ app.UseSwagger()
        options.DisplayOperationId();
        options.DocExpansion(DocExpansion.List);
        options.EnableFilter();
+       options.EnableTryItOutByDefault();
+       options.RoutePrefix = string.Empty;
    });
-
 
 app.UseHttpsRedirection();
 
 app.MapEndpoints();
 
-app.UseApiResponseAndExceptionWrapper(new AutoWrapperOptions
-{
-    ShowIsErrorFlagForSuccessfulResponse = true,
-    ShowStatusCode = true,
-    IsDebug = true
-});
+app.UseExceptionHandler("/error");
 
 using (var scope = app.Services.CreateScope())
 {

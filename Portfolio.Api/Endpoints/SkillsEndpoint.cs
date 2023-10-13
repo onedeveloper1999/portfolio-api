@@ -13,17 +13,13 @@ public class SkillsEndpoint : IEndpoint
     {
         var skillGroup = routeBuilder.MapGroup(skillEndpointTag.ToLower()).WithTags(skillEndpointTag);
 
-        skillGroup.MapGet(string.Empty, async ([FromServices] ISkillService skillService, HttpContext context) =>
-        {
-            return await skillService.GetAllSkillsAsync();
-        });
+        skillGroup.MapGet(string.Empty, async ([FromServices] ISkillService skillService) => await skillService.GetAllSkillsAsync());
 
         skillGroup.MapGet("/{skillId:int}", async (int skillId, [FromServices] ISkillService skillService) => await skillService.GetSkillByIdAsync(skillId));
 
-        skillGroup.MapPost(string.Empty, async ([FromBody] List<SkillDto> skillDtos, [FromServices] ISkillService skillService) =>
-        {
-            return await skillService.AddSkillAsync(skillDtos);
-        }).AddEndpointFilter<ValidationFilter<SkillDto>>();
+        skillGroup.MapPost(string.Empty, async ([FromBody] List<SkillDto> skillDtos, [FromServices] ISkillService skillService)
+                                                                                                    => await skillService.AddSkillAsync(skillDtos))
+                                                                                                                        .AddEndpointFilter<ValidationFilter<SkillDto>>();
 
         skillGroup.MapDelete("/{skillId:int}", async (int skillId, [FromServices] ISkillService skillService) => await skillService.DeleteSkillAsync(skillId));
 

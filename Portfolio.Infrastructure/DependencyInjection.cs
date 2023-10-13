@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Portfolio.Core.Interfaces;
 using Portfolio.Infrastructure.Persistence;
 using Portfolio.Infrastructure.Repositories;
+using System.Data;
 
 namespace Portfolio.Infrastructure;
 public static class DependencyInjection

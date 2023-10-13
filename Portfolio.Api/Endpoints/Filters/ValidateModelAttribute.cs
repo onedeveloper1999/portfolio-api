@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace Portfolio.Api.Endpoints.Filters;
+﻿namespace Portfolio.Api.Endpoints.Filters;
 
 public class ValidationFilter<T> : IEndpointFilter
 {

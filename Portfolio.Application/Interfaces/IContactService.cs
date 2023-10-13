@@ -1,5 +1,4 @@
-﻿using AutoWrapper.Wrappers;
-using Portfolio.Application.DataContracts;
+﻿using Portfolio.Application.DataContracts;
 
 namespace Portfolio.Application.Interfaces;
 public interface IContactService

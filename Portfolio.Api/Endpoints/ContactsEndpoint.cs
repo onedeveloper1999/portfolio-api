@@ -13,17 +13,12 @@ public class ContactsEndpoint : IEndpoint
     {
         var contactGroup = routeBuilder.MapGroup(contactEndpointTag.ToLower()).WithTags(contactEndpointTag);
 
-        contactGroup.MapGet(string.Empty, async ([FromServices] IContactService contactService, HttpContext context) =>
-        {
-            return await contactService.GetAllContactsAsync();
-        });
+        contactGroup.MapGet(string.Empty, async ([FromServices] IContactService contactService) => await contactService.GetAllContactsAsync());
 
         contactGroup.MapGet("/{contactId:int}", async (int contactId, [FromServices] IContactService contactService) => await contactService.GetContactByIdAsync(contactId));
 
-        contactGroup.MapPost(string.Empty, async ([FromBody] ContactDto contactDto, [FromServices] IContactService contactService) =>
-        {
-            return await contactService.AddContactAsync(contactDto);
-        }).AddEndpointFilter<ValidationFilter<ContactDto>>();
+        contactGroup.MapPost(string.Empty, async ([FromBody] ContactDto contactDto, [FromServices] IContactService contactService)
+            => await contactService.AddContactAsync(contactDto)).AddEndpointFilter<ValidationFilter<ContactDto>>();
 
         contactGroup.MapDelete("/{contactId:int}", async (int contactId, [FromServices] IContactService contactService) => await contactService.DeleteContactAsync(contactId));
 

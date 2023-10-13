@@ -6,10 +6,4 @@ public class ContactMessagesEndpointTest
     {
         Assert.Equal(1,1);
     }
-
-    [Fact]
-    public void ConTactMessageEndpoints_Get_Returns200Ok()
-    {
-        Assert.Equal(1, 1);
-    }
 }
